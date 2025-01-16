@@ -49,7 +49,7 @@ class RWModel:
         # 確率分布に基づいてアームを選択
         return np.random.choice(len(self.values), p = probabilities), probabilities
 
-# 実験の設定　num_trials: 試行回数, learning_rate: 学習率, temperature: ソフトマックス関数における温度パラメータ
+# 実験の実行関数　num_trials: 試行回数, learning_rate: 学習率, temperature: ソフトマックス関数における温度パラメータ
 def run_experiment(reward_probs, num_trials=80, learning_rate=0.3, temperature=3.0):
     env = BanditEnvironment(reward_probs)
     agent = RWModel(len(reward_probs), learning_rate)
@@ -75,6 +75,7 @@ def run_experiment(reward_probs, num_trials=80, learning_rate=0.3, temperature=3
 # 実行
 reward_probs = [0.7, 0.3]  # 各アームの報酬確率
 rewards,actions,final_values,Tvalues = run_experiment(reward_probs)
+
 
 # 結果の表示
 print("累積報酬:", sum(rewards))
