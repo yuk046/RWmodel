@@ -9,12 +9,14 @@ class BanditEnvironment:
     def __init__(self, reward_probs):
         """
         :param reward_probs: 各アームの報酬確率（例: [0.7, 0.3]）
+        薬物依存の環境ではどちらも１
         """
         self.reward_probs = reward_probs
 
     def pull_arm(self, arm):
         """
-        指定されたアームを引き、報酬を返す
+        0は自然報酬
+        1は薬物報酬
 
         """
         if arm == 0:
@@ -32,11 +34,12 @@ class RWModel:
         self.num_arms = num_arms
         self.learning_rate = learning_rate
         self.values = np.zeros(num_arms)  # 各アームの価値予測する配列用意
-        self.Dopamine = [0,0.2]
+        self.Dopamine = [0,0.2] #ここでDopamineの値を設定することができる。（第一項：自然報酬　第二項：薬物報酬）
 
     def update(self, arm, reward):
         """
         スロットの価値予測を更新 prediction_error = 報酬予測誤差
+        薬物が選択された場合にはDopamineに0.2の値が入る。
         """
         prediction_error = max(reward - self.values[arm]+self.Dopamine[arm],self.Dopamine[arm])
         self.values[arm] += self.learning_rate * prediction_error
@@ -78,6 +81,7 @@ def run_experiment(reward_probs, num_trials=80, learning_rate=0.3, temperature=3
     return rewards,actions,agent.values,timevalues
 
 # 実行
+# 依存症を考慮したモデルではどちらも１
 reward_probs = [1.0, 1.0]  # 各アームの報酬確率
 rewards,actions,final_values,Tvalues = run_experiment(reward_probs)
 
